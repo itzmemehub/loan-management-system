@@ -31,9 +31,58 @@ The production files are generated in `frontend/dist`.
 - Vercel: deploy the `frontend` folder; `vercel.json` provides the SPA fallback.
 - The Node/Mongo backend must be hosted separately on a server/runtime that supports Node.js and persistent storage.
 
-## Uploaded documents
-Documents are saved by the backend into `backend/uploads`. They are saved on the computer/server where the backend is running, not directly onto an applicant's PC.
+### Railway + Netlify deployment
 
+The easiest production setup for this repository is:
+
+- Railway for the Express backend
+- MongoDB Atlas for MongoDB
+- Netlify for the Vite frontend
+
+#### 1. Deploy the backend to Railway
+
+1. Push this repository to GitHub and open [Railway](https://railway.com/new).
+2. Create a project with **Deploy from GitHub repo**, then select this repository.
+3. In the backend service settings, set **Root Directory** to `/backend`.
+4. Railway should detect the Node app automatically. If it asks for commands, use:
+   - Build: `npm install`
+   - Start: `npm start`
+5. In the service's **Variables** tab, add:
+
+   ```text
+   MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>/<database>?retryWrites=true&w=majority
+   JWT_SECRET=<long-random-secret>
+   ADMIN_EMAIL=<admin-login-email>
+   ADMIN_PASSWORD=<strong-admin-password>
+   NODE_ENV=production
+   ```
+
+   Do not add a fixed `PORT`; Railway supplies it automatically.
+6. Deploy the service. In **Settings > Networking**, click **Generate Domain**.
+7. Open the generated URL. It should return the JSON message `Loan Management Backend Running`.
+
+Before deploying, allow Railway to connect in MongoDB Atlas under **Network Access**. For a quick first deployment, `0.0.0.0/0` works; restrict it later if your MongoDB setup supports a narrower allowlist.
+
+#### 2. Deploy the frontend to Netlify
+
+1. Create a new Netlify site from the same GitHub repository.
+2. Set **Base directory** to `frontend`.
+3. Set **Build command** to `npm run build`.
+4. Set **Publish directory** to `frontend/dist` (or `dist` when the base directory is applied).
+5. Add this environment variable before the first deploy:
+
+   ```text
+   VITE_API_URL=https://<your-railway-domain>/api
+   ```
+
+   Replace `<your-railway-domain>` with the Railway domain from step 1. Do not add a trailing slash after `api`.
+6. Deploy the site. The included `frontend/public/_redirects` file keeps React routes working after refresh.
+
+If the frontend was already deployed on Netlify, only add or update `VITE_API_URL` and trigger a new deploy. Vite variables are embedded during the build, so changing the variable requires a rebuild.
+
+#### Uploaded documents
+
+Railway's normal container filesystem is not permanent: files in `backend/uploads` can disappear when the service is redeployed or moved. For real customer documents, use object storage such as S3-compatible storage or attach a Railway volume and update the upload storage path. Do not rely on the container filesystem as the only copy of uploaded documents.
 
 ## Customer document uploads
 

@@ -1,3 +1,5 @@
+require("node:dns").setServers(["8.8.8.8", "8.8.4.4"]);
+
 const path = require("path");
 const express = require("express");
 const cors = require("cors");

@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-  if (!process.env.MONGO_URI) throw new Error("MONGO_URI is missing from backend/.env");
-  await mongoose.connect(process.env.MONGO_URI);
+  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  if (!mongoUri) {
+    throw new Error("MONGODB_URI is missing from backend/.env");
+  }
+  await mongoose.connect(mongoUri);
   console.log("✅ MongoDB Connected");
 };
 
