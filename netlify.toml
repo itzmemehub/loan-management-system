@@ -2,3 +2,6 @@
   base = "frontend"
   publish = "dist"
   command = "npm run build"
+
+[build.environment]
+  VITE_API_URL = "https://loanzing-backend-production-bc7b.up.railway.app/api"

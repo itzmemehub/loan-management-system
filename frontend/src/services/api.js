@@ -1,10 +1,13 @@
 import axios from "axios";
 import { endSession } from "./auth";
 
-// "/api" (the default) means the API is reached through the same address as
-// the site: the Vite dev proxy locally, a Netlify/Vercel proxy in production.
-// That keeps the session cookie first-party, which Safari requires.
-const API_URL = import.meta.env.VITE_API_URL || "/api";
+// The local default uses the Vite proxy. Production builds use the deployed
+// backend unless a hosting environment provides its own VITE_API_URL.
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD
+    ? "https://loanzing-backend-production-bc7b.up.railway.app/api"
+    : "/api");
 
 // Where the backend serves uploaded files from (/uploads/...). Empty when the
 // API is same-origin.
