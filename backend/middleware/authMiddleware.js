@@ -1,8 +1,16 @@
 const jwt = require("jsonwebtoken");
+const { SESSION_COOKIE } = require("../config/session");
+
+// The session normally arrives as the HTTP-only cookie set at login. A Bearer
+// header is still accepted for scripts and API clients.
+function readToken(req) {
+  const header = req.headers.authorization || "";
+  if (header.startsWith("Bearer ")) return header.slice(7);
+  return req.cookies?.[SESSION_COOKIE] || null;
+}
 
 function requireAdmin(req, res, next) {
-  const header = req.headers.authorization || "";
-  const token = header.startsWith("Bearer ") ? header.slice(7) : null;
+  const token = readToken(req);
   if (!token) return res.status(401).json({ success: false, message: "Admin authentication required" });
 
   try {

@@ -5,6 +5,8 @@
 // or the backend is not running locally), applications are saved in the
 // browser so that submitting a form never fails with "Something went wrong".
 
+import { DOCUMENT_KEYS } from "../config/documents";
+
 const KEY = "localLoanApplications";
 const MAX_INLINE_FILE = 1.5 * 1024 * 1024; // keep localStorage usage sane
 
@@ -41,7 +43,7 @@ const fileToRecord = (file) =>
 
 export async function saveLocalApplication(formData, files) {
   const docs = {};
-  for (const key of ["aadhaar", "pan", "salarySlip", "bankStatement", "photo"]) {
+  for (const key of DOCUMENT_KEYS) {
     docs[key] = await fileToRecord(files?.[key]);
   }
 
@@ -62,7 +64,7 @@ export async function saveLocalApplication(formData, files) {
   if (!write(list)) {
     // Storage full: drop inline documents and keep the record itself.
     const light = { ...record };
-    for (const key of ["aadhaar", "pan", "salarySlip", "bankStatement", "photo"]) {
+    for (const key of DOCUMENT_KEYS) {
       if (String(light[key]).startsWith("data:")) light[key] = files?.[key]?.name || "";
     }
     write([light, ...read()]);

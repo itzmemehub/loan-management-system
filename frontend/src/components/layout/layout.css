@@ -1,0 +1,59 @@
+/* Header (desktop), tab bar (mobile) and footer */
+
+/* Header: a floating glass pill */
+.topbar { position: sticky; top: 12px; z-index: 40; width: min(1240px, calc(100% - 24px)); margin: 12px auto 0; border-radius: 999px; color: #fff; background: linear-gradient(135deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .05)); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(255, 255, 255, .18); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 12px 32px rgba(8, 4, 30, .35); }
+.topbar-inner { height: 64px; padding: 0 10px 0 18px; display: flex; align-items: center; gap: 32px; }
+
+.logo { display: inline-flex; align-items: center; gap: 10px; color: inherit; }
+.logo-mark { width: 36px; height: 36px; border-radius: 10px; background: var(--lf-marigold); display: grid; place-items: center; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6); }
+.logo-mark svg { width: 34px; height: 34px; fill: none; stroke: var(--lf-night); stroke-width: 1; }
+.logo-word { font-family: var(--font-display); font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+
+.topbar-links { flex: 1; display: flex; gap: 4px; }
+.topbar-links a { padding: 8px 14px; border-radius: 999px; font-size: 15px; font-weight: 500; opacity: .8; transition: opacity .15s, background .15s; }
+.topbar-links a:hover, .topbar-links a.active { opacity: 1; background: rgba(255, 255, 255, .12); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.topbar-quiet { border: 0; background: transparent; color: inherit; cursor: pointer; padding: 10px 14px; font-size: 15px; font-weight: 500; }
+.topbar-quiet:hover { text-decoration: underline; text-underline-offset: 4px; }
+.topbar-cta { display: inline-flex; align-items: center; justify-content: center; padding: 11px 20px; border-radius: 999px; background: var(--lf-gold-fill); color: var(--lf-night); font-size: 15px; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 6px 18px rgba(255, 194, 61, .3); transition: transform .15s; }
+.topbar-cta:hover { transform: translateY(-1px); }
+
+/* Mobile tab bar: hidden on desktop */
+.tabbar { display: none; }
+
+@media (max-width: 900px) {
+  /* App layout: the tab bar replaces the header */
+  .topbar { display: none; }
+
+  .tabbar { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 50; height: var(--tabbar-h); display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; padding: 0 6px; border-radius: 26px; background: linear-gradient(135deg, rgba(40, 32, 90, .72), rgba(28, 22, 64, .6)); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, .18); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 16px 40px rgba(8, 4, 30, .55); }
+  .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; height: 100%; padding: 0; border: 0; background: none; color: var(--lf-text-dim); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .15s; }
+  .tab-icon { display: grid; place-items: center; width: 48px; height: 30px; border-radius: 999px; transition: background .2s, transform .15s; }
+  .tab svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tab-label { font-size: 11px; font-weight: 600; letter-spacing: .01em; }
+  .tab.is-active { color: #fff; }
+  .tab.is-active .tab-icon { background: rgba(255, 255, 255, .16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25); }
+  .tab:active .tab-icon { transform: scale(.9); }
+
+  .tab-primary { color: #fff; }
+  .tab-primary .tab-icon { width: 54px; height: 54px; margin-top: -26px; border-radius: 50%; background: var(--lf-gold-fill); color: var(--lf-night); border: 4px solid rgba(28, 22, 64, .85); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 8px 22px rgba(255, 176, 32, .45); }
+  .tab-primary svg { width: 24px; height: 24px; stroke-width: 2.6; }
+  .tab-primary.is-active .tab-icon { background: linear-gradient(180deg, #ffe08f, #ffca52); }
+}
+
+/* Footer */
+.site-foot { position: relative; z-index: 1; overflow: hidden; color: #c9c3e6; background: rgba(14, 10, 38, .5); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); border-top: 1px solid rgba(255, 255, 255, .12); }
+.site-foot-art { position: absolute; right: -140px; top: -120px; width: 520px; height: 520px; fill: none; stroke: var(--lf-lilac); stroke-width: .6; opacity: .14; pointer-events: none; }
+.site-foot-inner { position: relative; padding: 72px 0 48px; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 48px; }
+.site-foot .logo { color: #fff; }
+.site-foot-brand p { margin: 18px 0 24px; max-width: 36ch; font-size: 15px; line-height: 1.6; }
+.site-foot-col { display: flex; flex-direction: column; gap: 12px; font-size: 15px; }
+.site-foot-col h2 { margin: 6px 0; color: #fff; font-family: var(--font-body); font-size: 15px; font-weight: 600; }
+.site-foot-col a { width: fit-content; transition: color .15s; }
+.site-foot-col a:hover { color: var(--lf-marigold); }
+.site-foot-base { position: relative; padding: 22px 0 28px; display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid rgba(184, 169, 245, .16); font-size: 13px; color: #9c95c4; }
+
+@media (max-width: 900px) {
+  /* In the app layout the tab bar does the footer's job */
+  .site-foot-inner { display: none; }
+  .site-foot-base { flex-direction: column; gap: 6px; padding: 20px 0; border-top: 0; }
+}

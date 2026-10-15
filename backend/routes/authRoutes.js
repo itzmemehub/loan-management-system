@@ -1,5 +1,8 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const { requireAdmin } = require("../middleware/authMiddleware");
+const { SESSION_HOURS, setSessionCookie, clearSessionCookie } = require("../config/session");
+
 const router = express.Router();
 
 router.post("/login", (req, res) => {
@@ -15,8 +18,19 @@ router.post("/login", (req, res) => {
     return res.status(401).json({ success: false, message: "Incorrect email or password. Please try again." });
   }
 
-  const token = jwt.sign({ role: "admin", email: adminEmail }, process.env.JWT_SECRET, { expiresIn: "8h" });
-  res.json({ success: true, token });
+  const token = jwt.sign({ role: "admin", email: adminEmail }, process.env.JWT_SECRET, { expiresIn: `${SESSION_HOURS}h` });
+  setSessionCookie(res, token);
+  res.json({ success: true, admin: { email: adminEmail } });
+});
+
+router.post("/logout", (_req, res) => {
+  clearSessionCookie(res);
+  res.json({ success: true });
+});
+
+// Lets the frontend check whether the session cookie is still valid.
+router.get("/me", requireAdmin, (req, res) => {
+  res.json({ success: true, admin: { email: req.admin.email } });
 });
 
 module.exports = router;

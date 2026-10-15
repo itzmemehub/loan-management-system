@@ -55,9 +55,10 @@ The easiest production setup for this repository is:
    ADMIN_EMAIL=<admin-login-email>
    ADMIN_PASSWORD=<strong-admin-password>
    NODE_ENV=production
+   CLIENT_ORIGIN=https://<your-netlify-site>.netlify.app
    ```
 
-   Do not add a fixed `PORT`; Railway supplies it automatically.
+   Do not add a fixed `PORT`; Railway supplies it automatically. `CLIENT_ORIGIN` is the frontend address allowed to use the admin session (comma separate several).
 6. Deploy the service. In **Settings > Networking**, click **Generate Domain**.
 7. Open the generated URL. It should return the JSON message `Loan Management Backend Running`.
 
@@ -69,16 +70,21 @@ Before deploying, allow Railway to connect in MongoDB Atlas under **Network Acce
 2. Set **Base directory** to `frontend`.
 3. Set **Build command** to `npm run build`.
 4. Set **Publish directory** to `frontend/dist` (or `dist` when the base directory is applied).
-5. Add this environment variable before the first deploy:
+5. Proxy the API through Netlify. Add these two lines at the **top** of `frontend/public/_redirects`, above the existing `/* /index.html 200` line, with your Railway domain from step 1:
 
    ```text
-   VITE_API_URL=https://<your-railway-domain>/api
+   /api/*      https://<your-railway-domain>/api/:splat      200
+   /uploads/*  https://<your-railway-domain>/uploads/:splat  200
    ```
 
-   Replace `<your-railway-domain>` with the Railway domain from step 1. Do not add a trailing slash after `api`.
-6. Deploy the site. The included `frontend/public/_redirects` file keeps React routes working after refresh.
+   Do **not** set `VITE_API_URL`; the frontend then calls `/api` on its own domain.
+6. Deploy the site. The `/* /index.html 200` line keeps React routes working after refresh.
 
-If the frontend was already deployed on Netlify, only add or update `VITE_API_URL` and trigger a new deploy. Vite variables are embedded during the build, so changing the variable requires a rebuild.
+**Why the proxy:** the admin session is an HTTP-only cookie. Through the proxy the site and the API share one domain, so the cookie works in every browser, including Safari on iPhone, which blocks cookies from a different site.
+
+**Without a proxy** (not recommended): set `VITE_API_URL=https://<your-railway-domain>/api` on Netlify and `COOKIE_SAMESITE=none` on Railway. Sign-in will not work in Safari. Vite variables are embedded at build time, so changing one needs a rebuild.
+
+For Vercel, the equivalent is a `rewrites` entry in `frontend/vercel.json` mapping `/api/(.*)` and `/uploads/(.*)` to the Railway domain, placed before the catch-all.
 
 #### Uploaded documents
 
@@ -86,6 +92,6 @@ Railway's normal container filesystem is not permanent: files in `backend/upload
 
 ## Customer document uploads
 
-The application upload form supports Aadhaar, PAN, salary slip, bank statement, and photograph uploads. Files are saved by the backend in `backend/uploads/` and exposed to the admin dashboard through `/uploads/<filename>`. The upload limit is 10 MB per file and accepted formats are PDF, JPG, JPEG, and PNG.
+The application upload form supports Aadhaar, PAN, salary slip, bank statement, and photograph uploads. Files are saved by the backend in `backend/uploads/` and served at `/uploads/<filename>` **only to the signed-in admin** (the session cookie is required). The upload limit is 10 MB per file and accepted formats are PDF, JPG, JPEG, and PNG.
 
 For a production deployment, uploaded files are saved on the backend server's filesystem; a browser cannot silently save a customer's files directly into a private folder on the admin's personal PC.

@@ -1,0 +1,60 @@
+/* Shared UI pieces used by more than one page */
+
+/* Buttons: .btn plus one variant */
+.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border: 0; border-radius: 999px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background .15s, transform .15s; }
+.btn:disabled { opacity: .6; cursor: progress; }
+.btn-primary { background: var(--lf-gold-fill); color: var(--lf-night); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -2px 0 rgba(160, 100, 0, .2), 0 10px 26px rgba(255, 176, 32, .35); }
+.btn-primary:hover:not(:disabled) { transform: translateY(-1px); background: linear-gradient(180deg, #ffe08f, #ffca52); }
+.btn-glass { background: rgba(255, 255, 255, .08); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .28); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3); }
+.btn-glass:hover { background: rgba(255, 255, 255, .16); }
+
+/* Small pill buttons, e.g. table row actions */
+.chip { display: inline-flex; align-items: center; padding: 8px 14px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px; background: rgba(255, 255, 255, .08); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background .15s; }
+.chip:hover { background: rgba(255, 255, 255, .18); }
+.chip-danger { color: var(--lf-danger); }
+.chip-danger:hover { background: var(--lf-danger-bg); }
+
+.alert { padding: 14px 16px; border-radius: 14px; background: var(--lf-danger-bg); border: 1px solid rgba(255, 138, 122, .35); color: #ffd2cb; font-size: 15px; line-height: 1.5; }
+
+.back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--lf-text-soft); }
+.back-link::before { content: ""; width: 8px; height: 8px; border: solid currentColor; border-width: 0 0 2px 2px; transform: rotate(45deg); }
+.back-link:hover { color: #fff; }
+
+.spinner { width: 28px; height: 28px; border: 3px solid rgba(255, 255, 255, .18); border-top-color: var(--lf-marigold); border-radius: 50%; animation: lf-spin .8s linear infinite; }
+@keyframes lf-spin { to { transform: rotate(360deg); } }
+
+/* Full-page loading / not-found message */
+.center-state { display: grid; place-content: center; justify-items: center; gap: 12px; padding: 80px 20px; text-align: center; color: var(--lf-text-soft); }
+.center-state strong { font-family: var(--font-display); font-size: 26px; color: #fff; }
+.center-state p { margin: 0 0 8px; max-width: 44ch; }
+
+/* Form fields */
+.field { display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 600; }
+.field input { width: 100%; min-height: 52px; padding: 0 16px; border: 1px solid rgba(255, 255, 255, .2); border-radius: 14px; background: rgba(10, 6, 35, .3); font-size: 16px; font-weight: 400; color: #fff; box-shadow: inset 0 1px 3px rgba(0, 0, 0, .25); transition: border-color .15s, box-shadow .15s, background .15s; }
+.field input::placeholder { color: rgba(255, 255, 255, .42); }
+.field input:focus { outline: none; border-color: var(--lf-marigold); background: rgba(10, 6, 35, .45); box-shadow: 0 0 0 4px rgba(255, 194, 61, .2); }
+.field input:-webkit-autofill { -webkit-text-fill-color: #fff; box-shadow: 0 0 0 100px var(--lf-night-2) inset; caret-color: #fff; }
+
+/* A document row: icon + name + file name (apply form, loan details) */
+.file-icon { position: relative; flex: none; width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .16); }
+.file-icon::before { content: ""; position: absolute; left: 12px; top: 9px; width: 14px; height: 18px; border: 2px solid #fff; border-radius: 3px; }
+.file-text { position: relative; flex: 1; min-width: 0; }
+.file-text strong { display: block; font-size: 16px; font-weight: 600; }
+.file-text small { display: block; margin-top: 2px; font-size: 14px; color: var(--lf-text-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Loan type pill, tinted per loan type (config/loans.js) */
+.type-pill { display: inline-block; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; border: 1px solid rgba(255, 255, 255, .18); }
+.tone-lilac { background: var(--tone-lilac); }
+.tone-butter { background: var(--tone-butter); }
+.tone-mint { background: var(--tone-mint); }
+.tone-peach { background: var(--tone-peach); }
+.tone-grey { background: var(--tone-grey); }
+
+/* Applicant initial */
+.avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--lf-gold-fill); color: var(--lf-night); font-family: var(--font-display); font-weight: 800; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6); }
+.avatar-lg { width: 64px; height: 64px; font-size: 28px; }
+
+/* Security-print linework (components/ui/Guilloche.jsx) */
+.guilloche-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: lf-draw 2.6s cubic-bezier(.6, 0, .2, 1) forwards; }
+@keyframes lf-draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .guilloche-draw { stroke-dashoffset: 0; } }

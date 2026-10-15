@@ -1,0 +1,53 @@
+/* Aurora: the drifting colour the glass refracts (components/layout/Aurora.jsx) */
+.aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.aurora span { position: absolute; width: 55vmax; height: 55vmax; border-radius: 50%; filter: blur(70px); opacity: .55; animation: lf-drift 30s ease-in-out infinite alternate; }
+.aurora span:nth-child(1) { left: -15vmax; top: -20vmax; background: radial-gradient(circle, #6b4dff, transparent 65%); }
+.aurora span:nth-child(2) { right: -18vmax; top: 10vh; background: radial-gradient(circle, #e0479e, transparent 65%); animation-duration: 36s; animation-delay: -8s; }
+.aurora span:nth-child(3) { left: 20vw; bottom: -30vmax; background: radial-gradient(circle, #ffb020, transparent 62%); opacity: .4; animation-duration: 42s; }
+.aurora span:nth-child(4) { right: 10vw; bottom: -10vmax; width: 40vmax; height: 40vmax; background: radial-gradient(circle, #18b7a0, transparent 65%); opacity: .4; animation-duration: 34s; animation-delay: -14s; }
+@keyframes lf-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6vw, 8vh) scale(1.12); }
+  100% { transform: translate(-5vw, 4vh) scale(.94); }
+}
+
+/* Liquid glass. Wrapped in :where() so any component class can override
+   position, background, radius or shadow without a specificity fight. */
+:where(.glass) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .05));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 24px 60px rgba(8, 4, 30, .35);
+}
+/* Specular highlight that follows the pointer (position set by Aurora.jsx) */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(380px circle at var(--mx, 15%) var(--my, 0%), rgba(255, 255, 255, .2), transparent 50%);
+}
+/* Bright rim where light catches the edges */
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(150deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, .3));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* Without backdrop blur, keep panels readable */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass, .topbar, .tabbar { background: rgba(42, 34, 96, .95) !important; }
+}
