@@ -1,5 +1,5 @@
 import axios from "axios";
-import { endSession } from "./auth";
+import { endSession, getToken } from "./auth";
 
 // The local default uses the Vite proxy. Production builds use the deployed
 // backend unless a hosting environment provides its own VITE_API_URL.
@@ -15,6 +15,13 @@ export const API_ORIGIN = API_URL.replace(/\/api\/?$/, "");
 
 // withCredentials sends the HTTP-only session cookie.
 const API = axios.create({ baseURL: API_URL, withCredentials: true });
+
+// Attach the Bearer token to every request if available.
+API.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 // An expired or rejected admin session sends the admin back to sign in,
 // instead of pages quietly showing no data.

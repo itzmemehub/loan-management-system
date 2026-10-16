@@ -28,8 +28,8 @@ function LoginPage() {
     setLoading(true);
     try {
       // The backend sets the HTTP-only session cookie on success.
-      await API.post("/auth/login", { email: email.trim(), password });
-      startSession();
+      const res = await API.post("/auth/login", { email: email.trim(), password });
+      startSession(res.data.token);
       navigate(next, { replace: true });
     } catch (err) {
       setError(isOffline(err)

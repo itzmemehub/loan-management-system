@@ -20,7 +20,7 @@ router.post("/login", (req, res) => {
 
   const token = jwt.sign({ role: "admin", email: adminEmail }, process.env.JWT_SECRET, { expiresIn: `${SESSION_HOURS}h` });
   setSessionCookie(res, token);
-  res.json({ success: true, admin: { email: adminEmail } });
+  res.json({ success: true, admin: { email: adminEmail }, token });
 });
 
 router.post("/logout", (_req, res) => {
