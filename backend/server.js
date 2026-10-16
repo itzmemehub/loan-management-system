@@ -35,8 +35,12 @@ app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // Uploaded customer documents (Aadhaar, PAN, bank statements...) are stored in
-// /backend/uploads. Only the signed-in admin can open them.
-app.use("/uploads", requireAdmin, express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", requireAdmin, express.static(path.join(__dirname, "uploads")), (_req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Document not found on server. On cloud platforms like Railway, files uploaded to container storage are lost when a new deploy starts unless a persistent Railway Volume is mounted.",
+  });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/loans", loanRoutes);
