@@ -48,6 +48,16 @@ export async function signOut() {
 
 // Full URL for a stored document: a data: URL (offline record), an absolute
 // URL, or a path on the backend such as /uploads/file.pdf.
-export const fileUrl = (value) => (value.startsWith("http") || value.startsWith("data:") ? value : `${API_ORIGIN}/${value.replace(/^[/\\]+/, "")}`);
+export const fileUrl = (value) => {
+  if (!value) return "";
+  if (value.startsWith("data:")) return value;
+  const base = value.startsWith("http") ? value : `${API_ORIGIN}/${value.replace(/^[/\\]+/, "")}`;
+  const token = getToken();
+  if (token && base.includes("/uploads/") && !base.includes("token=")) {
+    const separator = base.includes("?") ? "&" : "?";
+    return `${base}${separator}token=${encodeURIComponent(token)}`;
+  }
+  return base;
+};
 
 export default API;
